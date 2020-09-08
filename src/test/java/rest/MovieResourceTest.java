@@ -33,7 +33,7 @@ public class MovieResourceTest {
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
-    
+
     private Movie m1;
     private Movie m2;
     private Movie m3;
@@ -50,7 +50,7 @@ public class MovieResourceTest {
 
         //Set System property so the project executed by the Grizly-server wil use this same database
         EMF_Creator.startREST_TestWithDB();
-        
+
         httpServer = startServer();
 
         //Setup RestAssured
@@ -61,10 +61,9 @@ public class MovieResourceTest {
     }
 
     @AfterAll
-    public static void closeTestServer()  {
-       
-       // System.in.read();
-       
+    public static void closeTestServer() {
+
+        // System.in.read();
         httpServer.shutdownNow();
         //Don't forget this, if you called its counterpart in @BeforeAll
         EMF_Creator.endREST_TestWithDB();
@@ -97,6 +96,7 @@ public class MovieResourceTest {
         //Hamcrest matcher
         given().when().get("/movie").then().assertThat().statusCode(200);
     }
+
     @Test
     public void contentType() {
         //Gherkin Syntax
@@ -104,12 +104,12 @@ public class MovieResourceTest {
         //Hamcrest matcher
         given().when().get("/movie").then().assertThat().contentType(ContentType.JSON);
     }
-    
+
     @Test
     public void demonStrateLogging() {
-        
+
         given().log().all().when().get("/movie").then().log().body();
-       
+
     }
 
     @Test
@@ -125,26 +125,47 @@ public class MovieResourceTest {
     @Test
     public void testGetAll() {
         //TODO
+        given().
+                get("/movie/all")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("title", hasItems("Harry Potter and the Philosopher's Stone",
+                        "Harry Potter and the Chamber of Secrets",
+                        "Once Upon a Time... in Hollywood"));
     }
 
-    
     @Test
     public void testFindByTitle() {
         //TODO
+        given().
+                get("/movie/title/Harry Potter and the Philosopher's Stone")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("title", hasItems("Harry Potter and the Philosopher's Stone"));
     }
-    
+
     @Test
     public void testFindByTitleNotFound() {
-       //TODO, if you have time
+        //TODO, if you have time
+        given().
+                get("/movie/title/Harry Potter and the Philosopher's Stone")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("title", hasItems(not("Kung fu panda")));
     }
-    
-     @Test
+
+    @Test
     public void testFindById() {
         //given().get("/movie/{id}", m2.getId())
         //TODO
-          
+        given().
+                get("/movie/" + m2.getId())
+               .then()
+               .assertThat()
+               .statusCode(HttpStatus.OK_200.getStatusCode())
+               .body("id", equalTo(m2.getId()));
     }
 }
-
-
- 
