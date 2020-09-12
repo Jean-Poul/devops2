@@ -17,8 +17,8 @@ and open the template in the editor.
         <div class="container">
         <label for="user">User: </label>
         <input type="text" id="user">
-        <button class="btn btn-primary" id="getUser">Get user</button>
-        <button class="btn btn-primary" id="getAllUsers">Get all users</button>
+        <button class="btn btn-primary" id="getUser">Get movie by id</button>
+        <button class="btn btn-primary" id="getAllUsers">Get all movies</button>
         <h5>Debugging: showing one user</h5>
         <div id="oneUser"></div>
         <h5>Table overview</h5>
@@ -37,14 +37,15 @@ and open the template in the editor.
             var getUser = document.getElementById("getUser");
             var getAllUsers = document.getElementById("getAllUsers");
 
-            //let url = "http://localhost:8080/jpareststarter/api/movie/";
-            let url = "https://www.jplm.dk/devops-starter/api/movie/all";
+            let url = "http://localhost:8080/jpareststarter/api/movie/all";
+            //let url = "https://jplm.dk/devops-starter-1.0.1/api/movie/";
 
             getUser.onclick = function () {
                 userTable.innerHTML = "";
                 var userInput = document.getElementById("user").value;
                 var newUrl = url + userInput;
 
+                
                 fetch(newUrl)
                         .then(res => res.json()) //in flow1, just do it
                         .then(data => {
